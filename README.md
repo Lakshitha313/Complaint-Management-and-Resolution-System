@@ -1,12 +1,12 @@
-Complaint Management and Resolution System
+#Complaint Management and Resolution System
 
- Overview
+ ##Overview
 
 The Complaint Management and Resolution System is a web-based application developed to simplify the process of submitting, managing, and tracking complaints. Users can register, log in, submit complaints, and view their complaint status. Administrators can review complaints, manage records, and update their resolution status.
 
 The system aims to provide an organized and transparent approach to complaint handling.
 
- Features
+ ##Features
 
 - User registration and login
 - Complaint submission
@@ -17,7 +17,7 @@ The system aims to provide an organized and transparent approach to complaint ha
 - Update complaint resolution status
 - MySQL database integration
 
- Technologies Used
+ ##Technologies Used
 
 - Frontend: HTML, CSS, JavaScript
 - Backend: Java
@@ -27,7 +27,7 @@ The system aims to provide an organized and transparent approach to complaint ha
 - Database Management Tool: MySQL Workbench
 - Version Control: Git and GitHub
 
- Project Structure
+ ##Project Structure
 
 Complaint-Management-and-Resolution-System/
 │
@@ -47,7 +47,7 @@ Complaint-Management-and-Resolution-System/
 └── README.md
 
 
- Database
+ ##Database
 
 The application uses MySQL to store user information and complaint records. JDBC is used to establish connectivity between the Java application and the database.
 
@@ -61,7 +61,7 @@ The database supports:
 Before running the application, create the required database and tables in MySQL and configure the connection details in "DBConnection.java".
 
 
- How to Run
+ ##How to Run
 
 1. Install Java Development Kit (JDK) and MySQL.
 2. Open MySQL Workbench and create the required database and tables.
@@ -73,7 +73,7 @@ Before running the application, create the required database and tables in MySQL
 
 Note: The exact commands and startup order depend on the server code and configuration.
 
- Future Enhancements
+ ##Future Enhancements
 
 - Email notifications for complaint status updates
 - Complaint priority levels and category-based filtering
