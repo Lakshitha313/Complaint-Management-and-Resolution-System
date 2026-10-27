@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaint Management System - Register</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#0F172A;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    width:340px;
+    background:#F8F8F2;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+
+h1{
+    text-align:center;
+    color:#1E3A8A;
+    margin-bottom:8px;
+}
+
+h3{
+    text-align:center;
+    color:#555;
+    margin-bottom:10px;
+    font-weight:normal;
+}
+
+label{
+    font-weight:bold;
+    color:#333;
+}
+
+input{
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+    margin-bottom:10px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:15px;
+}
+
+input:focus{
+    border-color:#2563EB;
+    outline:none;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    background:#2563EB;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1D4ED8;
+}
+
+.bottom-text{
+    text-align:center;
+    margin-top:18px;
+}
+
+.bottom-text a{
+    color:#2563EB;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.bottom-text a:hover{
+    text-decoration:underline;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Complaint Management System</h1>
+
+<h3>User Registration</h3>
+
+<form id="registerForm">
+
+<label>Full Name</label>
+<input type="text" id="name" placeholder="Enter Full Name">
+
+<label>Email</label>
+<input type="email" id="email" placeholder="Enter Email">
+
+<label>Phone Number</label>
+<input type="tel" id="phone" placeholder="Enter Phone Number">
+
+<label>Password</label>
+<input type="password" id="password" placeholder="Create Password">
+
+<label>Confirm Password</label>
+<input type="password" id="confirmPassword" placeholder="Confirm Password">
+
+<button type="submit">Register</button>
+
+</form>
+
+<div class="bottom-text">
+Already have an account?
+<a href="login.html">Login</a>
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("registerForm").addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (name === "" || email === "" || phone === "" || password === "" || confirmPassword === "") {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+    }
+
+    let formData =
+        "name=" + encodeURIComponent(name) +
+        "&email=" + encodeURIComponent(email) +
+        "&phone=" + encodeURIComponent(phone) +
+        "&password=" + encodeURIComponent(password);
+
+    try {
+
+        let response = await fetch("http://localhost:8080/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        });
+
+        let result = await response.text();
+
+        alert(result);
+
+        if (result === "Registration successful!") {
+            window.location.href = "login.html";
+        }
+
+    } catch (error) {
+
+        alert("Could not connect to the server.");
+
+        console.log(error);
+    }
+
+});
+
+</script>
+
+</body>
+</html>

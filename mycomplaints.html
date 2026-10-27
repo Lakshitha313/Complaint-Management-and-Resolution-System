@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Complaints</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#0F172A;
+}
+
+.container{
+    width:90%;
+    margin:40px auto;
+    background:#F8F8F2;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+h1{
+    text-align:center;
+    color:#1E3A8A;
+    margin-bottom:25px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#1E3A8A;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+}
+
+tr:hover{
+    background:#f2f2f2;
+}
+
+.pending{
+    color:#E67E22;
+    font-weight:bold;
+}
+
+.progress{
+    color:#2563EB;
+    font-weight:bold;
+}
+
+.resolved{
+    color:green;
+    font-weight:bold;
+}
+
+button{
+    background:#2563EB;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1D4ED8;
+}
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:25px;
+    text-decoration:none;
+    color:#2563EB;
+    font-weight:bold;
+}
+
+.back:hover{
+    text-decoration:underline;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>My Complaints</h1>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Title</th>
+<th>Category</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+<tbody id="complaintTableBody">
+</tbody>
+
+</table>
+
+<a href="dashboard.html" class="back">
+← Back to Dashboard
+</a>
+
+</div>
+
+<script>
+
+async function loadComplaints() {
+
+    let userId = localStorage.getItem("userId");
+
+    if (userId === null) {
+
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    let formData =
+        "userId=" + encodeURIComponent(userId);
+
+    try {
+
+        let response = await fetch("http://localhost:8083/mycomplaints", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+
+            body: formData
+        });
+
+        let result = await response.text();
+
+        if (result === "ERROR") {
+
+            alert("Could not load complaints.");
+            return;
+        }
+
+        let tableBody =
+            document.getElementById("complaintTableBody");
+
+        tableBody.innerHTML = "";
+
+        if (result.trim() === "") {
+
+            tableBody.innerHTML =
+                "<tr><td colspan='5'>No complaints found</td></tr>";
+
+            return;
+        }
+
+        let complaints = result.trim().split("\n");
+
+        for (let complaint of complaints) {
+
+            let data = complaint.split("|");
+
+            let id = data[0];
+let title = data[1];
+let category = data[2];
+let description = data[3];
+let location = data[4];
+let status = data[5];
+let date = data[6];
+
+complaintDetails[id] = {
+    id: id,
+    title: title,
+    category: category,
+    description: description,
+    location: location,
+    status: status,
+    date: date
+};
+
+            let row = document.createElement("tr");
+
+            let statusClass = "";
+
+            if (status === "Pending") {
+                statusClass = "pending";
+            }
+            else if (status === "In Progress") {
+                statusClass = "progress";
+            }
+            else if (status === "Resolved") {
+                statusClass = "resolved";
+            }
+
+            row.innerHTML =
+                "<td>" + id + "</td>" +
+                "<td>" + title + "</td>" +
+                "<td>" + category + "</td>" +
+                "<td class='" + statusClass + "'>" + status + "</td>" +
+                "<td><button onclick='viewComplaint(" + id + ")'>View</button></td>";
+
+            tableBody.appendChild(row);
+        }
+
+    } catch (error) {
+
+        alert("Could not connect to My Complaints server.");
+
+        console.log(error);
+    }
+}
+
+let complaintDetails = {};
+
+function viewComplaint(id) {
+
+    let complaint = complaintDetails[id];
+
+    if (!complaint) {
+        alert("Complaint details not found.");
+        return;
+    }
+
+    alert(
+        "Complaint ID: " + complaint.id +
+        "\n\nTitle: " + complaint.title +
+        "\nCategory: " + complaint.category +
+        "\nDescription: " + complaint.description +
+        "\nLocation: " + complaint.location +
+        "\nStatus: " + complaint.status +
+        "\nDate: " + complaint.date
+    );
+}
+loadComplaints();
+</script>
+
+</body>
+</html>

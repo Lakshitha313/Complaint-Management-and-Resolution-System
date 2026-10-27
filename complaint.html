@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit Complaint</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#0F172A;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    width:450px;
+    background:#F8F8F2;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+h1{
+    text-align:center;
+    color:#1E3A8A;
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+    margin-bottom:5px;
+    font-weight:bold;
+    color:#333;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:15px;
+}
+
+textarea{
+    resize:none;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    background:#2563EB;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#1D4ED8;
+}
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:15px;
+    text-decoration:none;
+    color:#2563EB;
+    font-weight:bold;
+}
+
+.back:hover{
+    text-decoration:underline;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Submit Complaint</h1>
+
+<form id="complaintForm">
+
+<label>Complaint Title</label>
+<input type="text" id="title" placeholder="Enter complaint title">
+
+<label>Category</label>
+
+<select id="category">
+<option value="">Select Category</option>
+<option>Water</option>
+<option>Electricity</option>
+<option>Road</option>
+<option>Internet</option>
+<option>Hostel</option>
+<option>Other</option>
+</select>
+
+<label>Description</label>
+
+<textarea
+id="description"
+rows="4"
+placeholder="Describe your complaint"></textarea>
+
+<label>Location</label>
+
+<input
+type="text"
+id="location"
+placeholder="Enter location">
+
+<button type="submit">
+Submit Complaint
+</button>
+
+</form>
+
+<a href="dashboard.html" class="back">
+← Back to Dashboard
+</a>
+
+</div>
+
+<script>
+
+document.getElementById("complaintForm").addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    let title = document.getElementById("title").value.trim();
+    let category = document.getElementById("category").value;
+    let description = document.getElementById("description").value.trim();
+    let location = document.getElementById("location").value.trim();
+
+    if (title === "" || category === "" || description === "" || location === "") {
+
+        alert("Please fill all fields.");
+        return;
+    }
+
+    let userId = localStorage.getItem("userId");
+
+    if (userId === null) {
+
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    let formData =
+        "userId=" + encodeURIComponent(userId) +
+        "&title=" + encodeURIComponent(title) +
+        "&category=" + encodeURIComponent(category) +
+        "&description=" + encodeURIComponent(description) +
+        "&location=" + encodeURIComponent(location);
+
+    try {
+
+        let response = await fetch("http://localhost:8082/complaint", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        });
+
+        let result = await response.text();
+
+        if (result === "Complaint submitted successfully!") {
+
+            alert("Complaint Submitted Successfully!");
+
+            window.location.href = "mycomplaints.html";
+
+        } else {
+
+            alert(result);
+        }
+
+    } catch (error) {
+
+        alert("Could not connect to the complaint server.");
+
+        console.log(error);
+    }
+
+});
+
+</script>
+
+</body>
+</html>
